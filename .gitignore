@@ -1,0 +1,7 @@
+# Ignore temp/system files
+~$*
+*.tmp
+.DS_Store
+__pycache__/
+*.pyc
+.env

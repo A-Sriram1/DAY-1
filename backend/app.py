@@ -3,10 +3,19 @@ import os
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-app = Flask(__name__)
+frontend_folder = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'frontend')
+app = Flask(__name__, static_folder=frontend_folder, static_url_path='/')
 CORS(app)
 
 DATA_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'cars_raw.json')
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    return app.send_static_file(path)
 
 def load_data():
     if not os.path.exists(DATA_FILE):

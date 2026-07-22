@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Used Car ETL Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar Navigation (or top nav, let's do top nav to keep it simple but premium) -->
+        <header class="header">
+            <div class="logo">
+                <i class="fa-solid fa-car-side"></i>
+                <h1>CarETL Dashboard</h1>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html" class="active">Dashboard</a>
+                <a href="reports.html">Reports</a>
+                <a href="settings.html">Settings</a>
+                <button id="themeToggle" class="icon-btn"><i class="fa-solid fa-moon"></i></button>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <!-- Toast Notifications -->
+            <div id="toast-container" class="toast-container"></div>
+
+            <div class="header-actions">
+                <h2>Overview</h2>
+                <div class="actions">
+                    <button class="btn btn-outline" id="refreshBtn"><i class="fa-solid fa-rotate"></i> Refresh</button>
+                    <button class="btn btn-outline" id="printBtn"><i class="fa-solid fa-print"></i> Print</button>
+                    <button class="btn btn-primary" id="cleanBtn"><i class="fa-solid fa-broom"></i> Clean Dataset</button>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" id="exportBtn"><i class="fa-solid fa-download"></i> Export</button>
+                        <div class="dropdown-menu">
+                            <a href="#" id="exportCsv">Export CSV</a>
+                            <a href="#" id="exportJson">Export JSON</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-car"></i></div>
+                    <div class="stat-info">
+                        <h3>Total Cars</h3>
+                        <p id="totalCars">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-tags"></i></div>
+                    <div class="stat-info">
+                        <h3>Avg Price</h3>
+                        <p id="avgPrice">$0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                    <div class="stat-info">
+                        <h3>Avg Mileage</h3>
+                        <p id="avgMileage">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-arrow-up-right-dots"></i></div>
+                    <div class="stat-info">
+                        <h3>Highest Price</h3>
+                        <p id="highestPrice">$0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-arrow-down-right-dots"></i></div>
+                    <div class="stat-info">
+                        <h3>Lowest Price</h3>
+                        <p id="lowestPrice">$0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filter Section -->
+            <div class="control-panel glass-card">
+                <div class="search-section">
+                    <div class="input-group">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Live Search by Brand, Model, Location...">
+                    </div>
+                </div>
+                <div class="filter-section">
+                    <select id="brandFilter">
+                        <option value="">All Brands</option>
+                    </select>
+                    <select id="fuelFilter">
+                        <option value="">All Fuels</option>
+                        <option value="Gasoline">Gasoline</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Electric">Electric</option>
+                        <option value="Hybrid">Hybrid</option>
+                    </select>
+                    <select id="transmissionFilter">
+                        <option value="">All Transmissions</option>
+                        <option value="Automatic">Automatic</option>
+                        <option value="Manual">Manual</option>
+                    </select>
+                    <select id="yearFilter">
+                        <option value="">All Years</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <!-- Script will populate years down to 2010 dynamically or via JS to keep HTML clean -->
+                    </select>
+                    <button class="btn btn-outline" id="applyFilterBtn">Filter</button>
+                    <button class="btn btn-outline" id="resetBtn">Reset</button>
+                </div>
+            </div>
+
+            <!-- Data Table Section -->
+            <div class="table-container glass-card">
+                <div id="loading" class="loading-spinner hidden">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>
+                </div>
+                <div id="emptyState" class="empty-state hidden">
+                    <img src="https://cdni.iconscout.com/illustration/premium/thumb/no-data-found-8867280-7265556.png" alt="No data found" width="150">
+                    <h3>No Data Found</h3>
+                    <p>Try adjusting your search or filters.</p>
+                </div>
+                <table class="data-table" id="carsTable">
+                    <thead>
+                        <tr>
+                            <th data-sort="id">ID <i class="fa-solid fa-sort"></i></th>
+                            <th data-sort="brand">Brand <i class="fa-solid fa-sort"></i></th>
+                            <th data-sort="model">Model <i class="fa-solid fa-sort"></i></th>
+                            <th data-sort="year">Year <i class="fa-solid fa-sort"></i></th>
+                            <th data-sort="price">Price <i class="fa-solid fa-sort"></i></th>
+                            <th data-sort="mileage">Mileage <i class="fa-solid fa-sort"></i></th>
+                            <th data-sort="fuel">Fuel <i class="fa-solid fa-sort"></i></th>
+                            <th data-sort="transmission">Transmission <i class="fa-solid fa-sort"></i></th>
+                            <th data-sort="location">Location <i class="fa-solid fa-sort"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Rows populated by JS -->
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <span id="pageInfo">Showing 1 to 10 of 100 entries</span>
+                    <div class="page-controls">
+                        <button id="prevPage" class="btn btn-outline" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                        <button id="nextPage" class="btn btn-outline"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <p>&copy; 2024 Used Car ETL Dashboard. Built for Data Analytics.</p>
+        </footer>
+    </div>
+    
+    <script src="js/app.js"></script>
+</body>
+</html>

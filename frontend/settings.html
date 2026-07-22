@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Used Car ETL Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard">
+        <header class="header">
+            <div class="logo">
+                <i class="fa-solid fa-car-side"></i>
+                <h1>CarETL Dashboard</h1>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html">Dashboard</a>
+                <a href="reports.html">Reports</a>
+                <a href="settings.html" class="active">Settings</a>
+                <button id="themeToggle" class="icon-btn"><i class="fa-solid fa-moon"></i></button>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <div class="header-actions">
+                <h2>Application Settings</h2>
+            </div>
+
+            <div class="glass-card">
+                <h3>ETL Preferences</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;">Configure how data is extracted and transformed.</p>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display:flex; align-items:center; gap: 0.5rem; margin-bottom:0.5rem;">
+                        <input type="checkbox" checked> Remove duplicate records automatically
+                    </label>
+                    <label style="display:flex; align-items:center; gap: 0.5rem; margin-bottom:0.5rem;">
+                        <input type="checkbox" checked> Drop rows with missing brands
+                    </label>
+                    <label style="display:flex; align-items:center; gap: 0.5rem;">
+                        <input type="checkbox" checked> Standardize capitalization
+                    </label>
+                </div>
+                
+                <button class="btn btn-primary" onclick="alert('Settings saved successfully!')">Save Preferences</button>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <p>&copy; 2024 Used Car ETL Dashboard. Built for Data Analytics.</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        function toggleTheme() {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.body.removeAttribute('data-theme');
+                document.getElementById('themeToggle').innerHTML = '<i class="fa-solid fa-moon"></i>';
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                document.getElementById('themeToggle').innerHTML = '<i class="fa-solid fa-sun"></i>';
+            }
+        }
+    </script>
+</body>
+</html>

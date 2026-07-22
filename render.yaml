@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: car-etl-dashboard
+    env: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: gunicorn backend.app:app
+    plan: free
